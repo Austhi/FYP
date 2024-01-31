@@ -4,10 +4,11 @@ import User from 'App/Models/User';
 import LoginUserValidator from 'App/Validators/LoginUserValidator';
 
 export default class AuthController {
-    public async register({ request, response } : HttpContextContract ) {
+    public async register({ auth, request, response } : HttpContextContract ) {
         const payload = await request.validate(RegisterUserValidator); 
         const user_created = await User.create(payload);
-        return response.status(200).json({ID: user_created.id});
+        const token = await auth.use('api').attempt(payload.email, payload.password)
+        return response.status(200).json({token: token});
     }
     public async login({auth, request, response } : HttpContextContract) {
         const {email, password} = await request.validate(LoginUserValidator); 
