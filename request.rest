@@ -1,0 +1,28 @@
+### request with adonis
+POST http://127.0.0.1:3333/api/auth/register
+Content-Type: application/json
+
+{
+  "email": "1example2@mail.com",
+  "username": "1testUsername",
+  "password": "123456789"
+}
+### login with adonis
+POST http://127.0.0.1:3333/api/auth/login
+Content-Type: application/json
+
+{
+  "email": "1example2@mail.com",
+  "username": "1testUsername",
+  "password": "123456789"
+}
+### access to protected route with bearer token
+GET http://127.0.0.1:3333/
+Authorization: Bearer NA.wHedS-esaKmZj64YOBcE8NhIsU0ohKLXpmaXPBxurHXfCzN-_jBqeoOLkfZu
+
+### try to access to protected  route without token 
+GET http://127.0.0.1:3333/
+Content-Type: application/json
+
+{
+}
