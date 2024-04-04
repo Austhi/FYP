@@ -1,0 +1,26 @@
+version: '3.3'
+
+services:
+  api-backend:
+    build:
+      context: ./api-backend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3333:3333"
+  
+  transversal-backend:
+    build:
+      context: ./transversal-backend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3334:3334"
+
+  medical-backend:
+    build:
+      context: ./medical-backend
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - "3335:3335"
