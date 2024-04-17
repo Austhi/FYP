@@ -9,6 +9,7 @@
 
 import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
+import axios from 'axios'
 
 const AuthController = () => import('#controllers/auth_controller')
 
@@ -31,6 +32,35 @@ router.get('me', async ({ auth, response }) => {
 
 router.group(() => {
   router.get('/', async () => {
-    return 'Hello, world!';
-  });
+    return {
+      provenance: 'api',
+      msg: 'hello world',
+    }
+  })
 }).prefix('api');
+
+const medicalUrl = 'http://medical:3335';
+const transversalUrl = 'http://transversal:3334';
+
+router.group(() => {
+  router.get('/transversal', async ({ response }) => {
+    console.log("GET /transversal")
+    try {
+      const { data } = await axios.get(transversalUrl + '/');
+      return response.status(200).json(data); // Send the response data to the client
+    } catch (error) {
+      console.log(error);
+      return response.status(500).json({ error: 'Internal server error' }); // Handle errors
+    }
+  });
+
+  router.get('/medical', async ({ response }) => {
+    try {
+      const { data } = await axios.get(medicalUrl + '/');
+      return response.status(200).json(data); // Send the response data to the client
+    } catch (error) {
+      console.log(error);
+      return response.status(500).json({ error: 'Internal server error' }); // Handle errors
+    }
+  });
+}).prefix('access');

@@ -54,6 +54,8 @@
     "@adonisjs/cors": "^2.2.1",
     "@adonisjs/lucid": "^20.1.0",
     "@vinejs/vine": "^1.7.1",
+    "adonis-swagger": "^1.2.9",
+    "axios": "^1.6.8",
     "better-sqlite3": "^9.4.5",
     "luxon": "^3.4.4",
     "reflect-metadata": "^0.2.1"

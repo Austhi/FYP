@@ -7,20 +7,32 @@ services:
       dockerfile: Dockerfile
     restart: always
     ports:
-      - "3333:3333"
+      - "3336:3336"
+    networks:
+      my-network:
+        aliases:
+          - api
   
   transversal-backend:
     build:
       context: ./transversal-backend
       dockerfile: Dockerfile
     restart: always
-    ports:
-      - "3334:3334"
+    networks:
+      my-network:
+        aliases:
+          - transversal
 
   medical-backend:
     build:
       context: ./medical-backend
       dockerfile: Dockerfile
     restart: always
-    ports:
-      - "3335:3335"
+    networks:
+      my-network:
+        aliases:
+          - medical
+
+networks:
+  my-network:
+    driver: bridge
