@@ -3,6 +3,15 @@ import { registerValidator, loginValidator } from '#validators/auth'
 import User from '#models/user'
 
 export default class AuthController {
+
+/**
+* @show
+* @paramPath id - Describe the param
+* @description Returns a product with it's relation on user and user relations
+* @responseBody 200 - <Product>.with(user, user.relations)
+* @responseBody 404
+*/
+
   async login({ request, response }: HttpContext) {
     const { email, password } = await request.validateUsing(loginValidator)
 
