@@ -25,5 +25,7 @@ router.group(() => {
 
 router.group(() => {
   router.post('create', [PatientController, 'create'])
+  router.post('modify', [PatientController, 'modify'])
+  router.post('delete', [PatientController, 'delete'])
   router.get('get', [PatientController, 'getPatientInfo'])
 }).prefix('patient')
