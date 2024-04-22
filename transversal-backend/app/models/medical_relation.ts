@@ -1,25 +1,15 @@
 import { DateTime } from 'luxon'
-import hash from '@adonisjs/core/services/hash'
-import { compose } from '@adonisjs/core/helpers'
 import { BaseModel, column } from '@adonisjs/lucid/orm'
-import { withAuthFinder } from '@adonisjs/auth/mixins/lucid'
-import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 
-const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
-  uids: ['email'],
-  passwordColumnName: 'password',
-})
-
-export default class MedicalRelation extends compose(BaseModel, AuthFinder) {
+export default class MedicalRelation extends BaseModel {
   @column({ isPrimary: true })
   declare id: number
 
   @column()
-  declare doctorID: string
+  declare doctor_id: number
 
   @column()
-  declare patientID: string
-
+  declare patient_id: number
 
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
