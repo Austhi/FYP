@@ -21,6 +21,8 @@ router.get('/', async () => {
 
 router.group(() => {
   router.post('create', [DoctorController, 'create'])
+  router.post('modify', [DoctorController, 'modify'])
+  router.post('delete', [DoctorController, 'delete'])
   router.get('get', [DoctorController, 'getDoctor'])
 
   // Modify Doctor
