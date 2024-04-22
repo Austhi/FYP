@@ -172,6 +172,19 @@ By following these steps, you should be able to start your Adonis.js server usin
   - 400 Bad Request: Missing or invalid parameters.
   - 409 Conflict: Email already in use.
 
+temporal alternative
+- **URL**: `/user/register/admin`
+- **HTTP Method**: POST
+- **Description**: Allows a user to create an account by providing their personal information.
+- **Parameters**:
+  - `fullName` (string): User's full name.
+  - `email` (string): User's email.
+  - `password` (string): User's password.
+- **Responses**:
+  - 201 Created: Account created successfully.
+  - 400 Bad Request: Missing or invalid parameters.
+  - 409 Conflict: Email already in use.
+
 #### Logout
 - **URL**: `/user/logout`
 - **HTTP Method**: POST

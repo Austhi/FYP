@@ -28,6 +28,7 @@ const AuthController = () => import('#controllers/auth_controller')
 
 router.group(() => {
   router.post('register', [AuthController, 'register'])
+  router.post('register/admin', [AuthController, 'registerAsAdmin'])
   router.post('login', [AuthController, 'login'])
   router.post('logout', [AuthController, 'logout']).use(middleware.auth())
   router.get('me', async ({ auth, response }) => {

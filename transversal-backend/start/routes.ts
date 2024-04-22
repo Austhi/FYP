@@ -7,6 +7,8 @@
 |
 */
 
+import DoctorController from '#controllers/DoctorController'
+import PatientController from '#controllers/PatientsController'
 import router from '@adonisjs/core/services/router'
 
 router.get('/', async () => {
@@ -15,3 +17,13 @@ router.get('/', async () => {
     msg: 'hello world',
   }
 })
+
+router.group(() => {
+  router.post('create', [DoctorController, 'create'])
+  router.get('get', [DoctorController, 'getDoctor'])
+}).prefix('doctor')
+
+router.group(() => {
+  router.post('create', [PatientController, 'create'])
+  router.get('get', [PatientController, 'getPatientInfo'])
+}).prefix('patient')

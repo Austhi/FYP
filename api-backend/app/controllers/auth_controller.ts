@@ -26,10 +26,20 @@ export default class AuthController {
   async register({ request, response }: HttpContext) {
       const payload = await request.validateUsing(registerValidator)
   
-      const user = await User.create(payload)
+      const payload_with_role = {fullName: payload.fullName, email: payload.email, password: payload.password, administrator: false}
+      const user = await User.create(payload_with_role)
   
       return response.created(user)
   }
+
+  async registerAsAdmin({ request, response }: HttpContext) {
+    const payload = await request.validateUsing(registerValidator)
+
+    const payload_with_role = {fullName: payload.fullName, email: payload.email, password: payload.password, administrator: true}
+    const user = await User.create(payload_with_role)
+
+    return response.created(user)
+}
 
   async logout({ auth, response }: HttpContext) {
     const user = auth.getUserOrFail()
