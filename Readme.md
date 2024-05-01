@@ -226,3 +226,12 @@ temporal alternative
 - **Responses**:
   - 200 OK: Successful request. Returns medical data.
   - 500 Internal Server Error: Server-side error.
+
+#### Get Patient
+- **URL**: `/doctor/patient_list`
+- **HTTP Method**: GET
+- **Description**: Retrieves the list of patient related of the currently authenticated user.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Responses**:
+  - 200 OK: Successful request. Returns the doctor's patients list.
+  - 401 Unauthorized: User is not authenticated or does not have necessary permissions.

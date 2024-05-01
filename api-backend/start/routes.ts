@@ -42,7 +42,7 @@ router.group(() => {
   .use(middleware.auth())
 }).prefix('user')
 
-// ajoutez cette route
+
 
 router.group(() => {
   router.get('/', async () => {
@@ -53,8 +53,11 @@ router.group(() => {
   })
 }).prefix('api');
 
-const medicalUrl = 'http://medical:3335';
-const transversalUrl = 'http://transversal:3334';
+// const medicalUrl = 'http://medical:3335';
+// const transversalUrl = 'http://transversal:3334';
+
+const medicalUrl = 'http://0.0.0.0:3335';
+const transversalUrl = 'http://0.0.0.0:3334';
 
 router.group(() => {
   router.get('/transversal', async ({ response }) => {
@@ -67,7 +70,7 @@ router.group(() => {
       return response.status(500).json({ error: 'Internal server error' }); // Handle errors
     }
   });
-
+  
   router.get('/medical', async ({ response }) => {
     try {
       const { data } = await axios.get(medicalUrl + '/');
@@ -78,3 +81,18 @@ router.group(() => {
     }
   });
 }).prefix('access');
+
+router.group(() => {
+  router.get('patient_list', async ({ auth, response }) => {
+    try {
+      const user = auth.getUserOrFail()
+      console.log('a')
+      const patients = await axios.post(transversalUrl + '/link/search', { doctor_id: 1 })
+      console.log(patients.data)
+      return response.status(200).json(patients.data)
+    } catch (error) {
+      console.log(error)
+    }
+  })
+  .use(middleware.auth())
+}).prefix('doctor')
