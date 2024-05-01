@@ -6,6 +6,12 @@ export const getPatient = vine.compile(
     })
 )
 
+export const findPatient = vine.compile(
+  vine.object({
+    name: vine.string().optional(),
+  })
+)
+
 export const deleteValidator = vine.compile(
   vine.object({
     id: vine.number(),

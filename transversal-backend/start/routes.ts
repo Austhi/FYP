@@ -24,6 +24,7 @@ router.group(() => {
   router.post('modify', [DoctorController, 'modify'])
   router.post('delete', [DoctorController, 'delete'])
   router.get('get', [DoctorController, 'getDoctor'])
+  router.get('findBy', [DoctorController, 'findBy'])
 
   // Modify Doctor
   // Delete Doctor
@@ -40,4 +41,5 @@ router.group(() => {
   router.post('modify', [PatientController, 'modify'])
   router.post('delete', [PatientController, 'delete'])
   router.get('get', [PatientController, 'getPatientInfo'])
+  router.get('findBy', [PatientController, 'findBy'])
 }).prefix('patient')

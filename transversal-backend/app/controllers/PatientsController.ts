@@ -1,5 +1,5 @@
 import type { HttpContext } from '@adonisjs/core/http'
-import { createValidator, deleteValidator, getPatient, modifyValidator } from '#validators/patient'
+import { createValidator, deleteValidator, findPatient, getPatient, modifyValidator } from '#validators/patient'
 import Patient from '#models/patient'
 
 export default class PatientController {
@@ -40,5 +40,11 @@ export default class PatientController {
         const payload = await request.validateUsing(getPatient)
         const patient = await Patient.findBy(payload)
         return response.status(200).json(patient)
+    }
+    async findBy({ request, response }: HttpContext) {
+        console.log(request.qs())
+        const payload = await request.validateUsing(findPatient)
+        const patients = await Patient.query().where('fullName', 'like', `%${payload.name ? payload.name : ""}%`); // Recherche partielle avec des jokers
+        return response.status(200).json(patients)
     }
 }

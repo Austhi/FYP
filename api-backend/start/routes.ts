@@ -83,16 +83,80 @@ router.group(() => {
 }).prefix('access');
 
 router.group(() => {
+  // route wip
   router.get('patient_list', async ({ auth, response }) => {
     try {
       const user = auth.getUserOrFail()
-      console.log('a')
-      const patients = await axios.post(transversalUrl + '/link/search', { doctor_id: 1 })
+      const patients = await axios.post(transversalUrl + '/link/search', { doctor_id: user.id })
       console.log(patients.data)
-      return response.status(200).json(patients.data)
+      let patient_list = []
+      for (let i = 0; i < patients.data.length; i+= 1) {
+        const patient_info = await axios.get(transversalUrl + '/patient/get', { params: {id: patients.data[i].patientId}})
+
+        patient_list.push(patient_info.data)
+      }
+      console.log(patient_list)
+      return response.status(200).json(patient_list)
     } catch (error) {
       console.log(error)
     }
   })
   .use(middleware.auth())
 }).prefix('doctor')
+
+router.group(() => {
+  router.get('patient_list', async ({ auth, request, response }) => {
+    try {
+      const user = auth.getUserOrFail()
+      if (user.administrator == false)
+        return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
+      const patient_list = await axios.get(transversalUrl + '/patient/findBy', { params: { name: request.qs().name ? request.qs().name : '' }})
+      console.log(patient_list.data)
+      return response.status(200).json(patient_list.data)
+    } catch (error) {
+      console.log(error)
+    }
+  })
+  .use(middleware.auth())
+  router.get('doctor_list', async ({ auth, request, response }) => {
+    try {
+      const user = auth.getUserOrFail()
+      if (user.administrator == false)
+        return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
+      const doctor_list = await axios.get(transversalUrl + '/doctor/findBy', { params: { name: request.qs().name ? request.qs().name : '' }})
+      console.log(doctor_list.data)
+      return response.status(200).json(doctor_list.data)
+    } catch (error) {
+      console.log(error)
+    }
+  })
+  .use(middleware.auth())
+  router.post('assign/patient_to_doctor', async ({ auth, request, response }) => {
+    try {
+      const user = auth.getUserOrFail()
+      if (user.administrator == false)
+        return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
+      const req = request.body()
+      console.log(req)
+      const response_link_add = await axios.post(transversalUrl + '/link/add', { "doctor_id": req.doctor_id, "patient_id": req.patient_id })
+      return response.status(response_link_add.status).json(response_link_add.data)
+    } catch (error) {
+      console.log(error)
+    }
+  })
+  .use(middleware.auth())
+  router.post('deassign/patient_to_doctor', async ({ auth, request, response }) => {
+    try {
+      const user = auth.getUserOrFail()
+      if (user.administrator == false)
+        return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
+      const req = request.body()
+      console.log(req)
+      const response_link_add = await axios.post(transversalUrl + '/link/remove', { "doctor_id": req.doctor_id, "patient_id": req.patient_id })
+      return response.status(response_link_add.status).json(response_link_add.data)
+    } catch (error) {
+      console.log(error)
+    }
+  })
+  .use(middleware.auth())
+}).prefix('admin')

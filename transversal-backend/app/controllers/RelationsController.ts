@@ -5,6 +5,7 @@ import MedicalRelation from '#models/medical_relation'
 export default class RelationControler {
     async add({ request, response }: HttpContext) {
         const payload = await request.validateUsing(createValidator)
+        console.log(payload)
         const doctor = await MedicalRelation.create(payload)
         return response.created(doctor)
     }
