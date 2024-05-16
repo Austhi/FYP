@@ -7,7 +7,16 @@
 |
 */
 
+import RecordsController from '#controllers/records_controller'
 import router from '@adonisjs/core/services/router'
+
+router.group(() => {
+  router.post('create', [RecordsController, 'create'])
+  router.post('modify', [RecordsController, 'modify'])
+  router.post('delete', [RecordsController, 'delete'])
+  // router.get('get', [DoctorController, 'getDoctor'])
+
+}).prefix('records')
 
 router.get('/', async () => {
   return {

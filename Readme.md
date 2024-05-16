@@ -203,6 +203,8 @@ temporal alternative
 - **HTTP Method**: GET
 - **Description**: Retrieves the information of the currently authenticated user.
 - **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Parameters**:
+  - None
 - **Responses**:
   - 200 OK: Successful request. Returns the user's information.
   - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
@@ -214,6 +216,8 @@ temporal alternative
 - **URL**: `/access/transversal`
 - **HTTP Method**: GET
 - **Description**: Retrieves transversal data.
+- **Parameters**:
+  - None
 - **Responses**:
   - 200 OK: Successful request. Returns transversal data.
   - 500 Internal Server Error: Server-side error.
@@ -223,6 +227,65 @@ temporal alternative
 - **URL**: `/access/medical`
 - **HTTP Method**: GET
 - **Description**: Retrieves medical data.
+- **Parameters**:
+  - None
 - **Responses**:
   - 200 OK: Successful request. Returns medical data.
   - 500 Internal Server Error: Server-side error.
+
+#### Get Patients linked to a Doctor
+- **URL**: `/doctor/patient_list`
+- **HTTP Method**: GET
+- **Description**: Retrieves a list of patients linked to the currently authenticated doctor. This endpoint is useful for doctors to view their associated patients.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Parameters**:
+  - None
+- **Responses**:
+  - 200 OK: Successful request. Returns the doctor's patients list.
+  - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
+
+#### Get Patients by name
+- **URL**: `/admin/patient_list`
+- **HTTP Method**: GET
+- **Description**: Fetches a list of patients based on a name query parameter. This endpoint allows searching for patients by full or partial name.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Parameters**:
+  - `name` (string): Patient's name or part of it.
+- **Responses**:
+  - 200 OK: Successful request. Returns the patients list find by the name.
+  - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
+
+#### Get Doctor by name
+- **URL**: `/admin/doctor_list`
+- **HTTP Method**: GET
+- **Description**: Fetches a list of doctors based on a name query parameter. This endpoint allows searching for doctors by full or partial name.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Parameters**:
+  - `name` (string): Doctor's name or part of it.
+- **Responses**:
+  - 200 OK: Successful request. Returns doctors list find by the name.
+  - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
+
+#### Assign Patient to Doctor
+- **URL**: `/admin/assign/patient_to_doctor`
+- **HTTP Method**: POST
+- **Description**: Assigns a patient to a doctor based on their respective IDs. This endpoint is used to establish a relationship between a doctor and a patient.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Parameters**:
+  - `doctor_id` (string): Doctor's id.
+  - `patient_id` (string): Patient's id.
+- **Responses**:
+  - 200 OK: Successful request.
+  - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
+
+#### Deassign Patient to Doctor
+- **URL**: `/admin/deassign/patient_to_doctor`
+- **HTTP Method**: POST
+- **Description**: Removes the association between a doctor and a patient based on their respective IDs. This endpoint is used to end the relationship between a doctor and a patient.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Parameters**:
+  - `doctor_id` (string): Doctor's id.
+  - `patient_id` (string): Patient's id.
+- **Responses**:
+  - 200 OK: Successful request.
+  - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
