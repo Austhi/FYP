@@ -8,6 +8,7 @@ export default class DoctorController {
         const payload_more = {fullName: payload.fullName, email: payload.email, role: payload.role, PatientsID: [].toString()}
         const doctor = await Doctor.create(payload_more)
         return response.created(doctor)
+        // return response.json({msg: "Ok"})
     }
 
     async modify({ request, response }: HttpContext) {

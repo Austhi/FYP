@@ -19,6 +19,13 @@ router.get('/', async () => {
   }
 })
 
+router.post('/', async ({request}) => {
+  return {
+    provenance: 'transversal',
+    msg: 'hello world ' + request.body().data,
+  }
+})
+
 router.group(() => {
   router.post('create', [DoctorController, 'create'])
   router.post('modify', [DoctorController, 'modify'])

@@ -11,6 +11,8 @@ import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 import axios from 'axios'
 import RequestController from '../app/controllers/request_controller.js'
+import { UserRegister } from '#controllers/auth_controller'
+import { HttpContext } from '@adonisjs/core/http'
 
 
 // //------------------------
@@ -58,14 +60,14 @@ import RequestController from '../app/controllers/request_controller.js'
     let medicalUrl = ''
     let transversalUrl = ''
 
-    let customParam = 'false'
+    let customParam = 'true'
 
     if (customParam === 'false') {
       medicalUrl = 'http://medical:3335';
       transversalUrl = 'http://transversal:3334';
     } else {
       medicalUrl = 'http://0.0.0.0:3335';
-      transversalUrl = 'http://0.0.0.0:3334';
+      transversalUrl = 'http://127.0.0.1:3334';
     }
     
     
@@ -73,7 +75,7 @@ import RequestController from '../app/controllers/request_controller.js'
       router.get('/transversal', async ({ response }) => {
         console.log("GET /transversal")
         try {
-          const { data } = await axios.get(transversalUrl + '/');
+          const { data } = await axios.post(transversalUrl + '/', {data: "data"});
           return response.status(200).json(data); // Send the response data to the client
         } catch (error) {
           console.log(error);
@@ -176,4 +178,47 @@ router.group(() => {
     }
   })
   .use(middleware.auth())
+  router.post('create/doctor', async ({ auth, request, response }) => {
+    try {
+      const user = auth.getUserOrFail()
+      if (user.administrator == false)
+        return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
+      const req = request.body()
+      console.log(req)
+      
+      const response_doctor_info_add = await axios.post(transversalUrl + '/doctor/create', 
+      {
+        "fullName": req.fullName,
+        "email": req.email,
+        "role": req.role ? req.role : "Undefined" 
+      })
+      const createRequestResponse = await UserRegister({ fullName: req.fullName, email: req.email, password: req.password ? req.password : "password", idDoctor: response_doctor_info_add.data.id});
+      return response.created(createRequestResponse)
+    } catch (error) {
+      console.log(error)
+      return response.internalServerError(error)
+    }
+  })
+  .use(middleware.auth())
+  router.post('create/patient', async ({ auth, request, response }) => {
+    try {
+      const user = auth.getUserOrFail()
+      if (user.administrator == false)
+        return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
+      const req = request.body()
+      console.log(req)
+      
+      const response_patient_info_add = await axios.post(transversalUrl + '/patient/create', 
+      {
+        "fullName": req.fullName,
+        "email": req.email,
+      })
+      return response.created(response_patient_info_add.data)
+    } catch (error) {
+      console.log(error)
+      return response.internalServerError(error)
+    }
+  })
+  .use(middleware.auth())
+
 }).prefix('admin')

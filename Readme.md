@@ -289,3 +289,36 @@ temporal alternative
 - **Responses**:
   - 200 OK: Successful request.
   - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
+
+
+### Documentation for Creating Doctor and Patient
+
+Below is the documentation for the routes responsible for creating doctors and patients:
+
+#### Create Doctor
+- **URL**: `/admin/create/doctor`
+- **HTTP Method**: POST
+- **Description**: Creates a new doctor with the provided information.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Parameters**:
+  - `fullName` (string): Full name of the doctor.
+  - `email` (string): Email address of the doctor.
+  - `role` (string) (optional): Role of the doctor (e.g., surgeon, physician).
+- **Responses**:
+  - 200 OK: Doctor successfully created.
+  - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
+
+#### Create Patient
+- **URL**: `/admin/create/patient`
+- **HTTP Method**: POST
+- **Description**: Creates a new patient with the provided information.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Parameters**:
+  - `fullName` (string): Full name of the patient.
+  - `email` (string): Email address of the patient.
+  - `birthDate` (string) (optional): Date of birth of the patient.
+- **Responses**:
+  - 200 OK: Patient successfully created.
+  - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
+
+These routes allow for the creation of doctors and patients within the system. Ensure to provide the required parameters for successful creation. Let me know if you need further assistance or details.

@@ -26,7 +26,7 @@ export default class AuthController {
   async register({ request, response }: HttpContext) {
       const payload = await request.validateUsing(registerValidator)
   
-      const payload_with_role = {fullName: payload.fullName, email: payload.email, password: payload.password, administrator: false}
+      const payload_with_role = {fullName: payload.fullName, email: payload.email, password: payload.password, administrator: false, doctorId: payload.idDoctor ? payload.idDoctor : 0}
       const user = await User.create(payload_with_role)
   
       return response.created(user)
@@ -35,7 +35,7 @@ export default class AuthController {
   async registerAsAdmin({ request, response }: HttpContext) {
     const payload = await request.validateUsing(registerValidator)
 
-    const payload_with_role = {fullName: payload.fullName, email: payload.email, password: payload.password, administrator: true}
+    const payload_with_role = {fullName: payload.fullName, email: payload.email, password: payload.password, administrator: true, doctorId: 0}
     const user = await User.create(payload_with_role)
 
     return response.created(user)
@@ -50,4 +50,11 @@ export default class AuthController {
     await User.accessTokens.delete(user, token)
     return response.ok({ message: 'Logged out' })
   }
+}
+
+export async function UserRegister(req) {
+  // const payload = await req.validateUsing(registerValidator)
+    const payload_with_role = {fullName: req.fullName, email: req.email, password: req.password, administrator: false, doctorId: req.idDoctor ? req.idDoctor : 0}
+    const user = await User.create(payload_with_role)
+    return user
 }
