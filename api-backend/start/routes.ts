@@ -60,7 +60,7 @@ import { HttpContext } from '@adonisjs/core/http'
     let medicalUrl = ''
     let transversalUrl = ''
 
-    let customParam = 'true'
+    let customParam = 'false'
 
     if (customParam === 'false') {
       medicalUrl = 'http://medical:3335';
