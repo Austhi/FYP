@@ -23,9 +23,6 @@ export default class Patient extends compose(BaseModel, AuthFinder) {
   @column()
   declare birth_date: string
 
-  @column()
-  declare medical_id: string
-
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

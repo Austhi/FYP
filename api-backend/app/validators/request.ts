@@ -15,3 +15,10 @@ export const assignRequestValidator = vine.compile(
       id_patient: vine.array(vine.string())
     })
 )
+
+export const interactRequestValidator = vine.compile(
+  vine.object({
+      requestID: vine.number(),
+      validation: vine.boolean()
+    })
+)

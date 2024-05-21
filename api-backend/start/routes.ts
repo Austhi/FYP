@@ -13,21 +13,9 @@ import axios from 'axios'
 import RequestController from '../app/controllers/request_controller.js'
 import { UserRegister, UserDeleted } from '#controllers/auth_controller'
 import { HttpContext } from '@adonisjs/core/http'
+import { medicalUrl, transversalUrl } from './network.js'
 
 
-// //------------------------
-// import swagger from '#config/swagger';
-// import AutoSwagger from '@outloud/adonis-autoswagger';
-// // returns swagger in YAML
-// router.get("/swagger", async () => {
-  //   return AutoSwagger.default.docs(router.toJSON(), swagger);
-  // });
-  // // Renders Swagger-UI and passes YAML-output of /swagger
-  // router.get("/docs", async () => {
-    //   return AutoSwagger.default.ui("/swagger");
-    // });
-    // //------------------------
-    
     const AuthController = () => import('#controllers/auth_controller')
     
     router.group(() => {
@@ -56,20 +44,6 @@ import { HttpContext } from '@adonisjs/core/http'
         }
       })
     }).prefix('api');
-
-    let medicalUrl = ''
-    let transversalUrl = ''
-
-    let customParam = 'false'
-
-    if (customParam === 'false') {
-      medicalUrl = 'http://medical:3335';
-      transversalUrl = 'http://transversal:3334';
-    } else {
-      medicalUrl = 'http://0.0.0.0:3335';
-      transversalUrl = 'http://127.0.0.1:3334';
-    }
-    
     
     router.group(() => {
       router.get('/transversal', async ({ response }) => {
@@ -120,6 +94,9 @@ router.group(() => {
   // route wip
   router.post('create', [RequestController, "create"])
   router.get('', [RequestController, "get"])
+  router.post('interaction', [RequestController, "interaction"])
+  router.get('types', [RequestController, "getRequestTypePossible"])
+
   .use(middleware.auth())
 }).prefix('request')
 

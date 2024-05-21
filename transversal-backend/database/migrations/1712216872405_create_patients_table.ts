@@ -9,7 +9,6 @@ export default class CreatePatients extends BaseSchema {
       table.string('full_name').nullable()
       table.string('email', 254).notNullable().unique()
       table.string('birth_date').notNullable()
-      table.string('medical_id').notNullable()
 
       table.timestamp('created_at').notNullable()
       table.timestamp('updated_at').nullable()

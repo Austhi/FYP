@@ -11,7 +11,7 @@ interface DeleteLinkPayload {
 export default class PatientController {
     async create({ request, response }: HttpContext) {
         const payload = await request.validateUsing(createValidator)
-        const payload_more = {fullName: payload.fullName, email: payload.email, birth_date: payload.birth_date ? payload.birth_date : "", medical_id: payload.medical_id ? payload.medical_id : ""}
+        const payload_more = {fullName: payload.fullName, email: payload.email, birth_date: payload.birth_date ? payload.birth_date : ""}
         console.log(payload_more)
         const patient = await Patient.create(payload_more)
         return response.created(patient)

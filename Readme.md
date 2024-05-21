@@ -348,3 +348,70 @@ These routes allow for the creation of doctors and patients within the system. E
   - 500 Internal Server Error: An error occurred during the deletion process.
 
 These routes allow for the deletion of doctors and patients within the system. Ensure to provide the required parameters for successful deletion. Let me know if you need further assistance or details.
+
+### Documentation for Request Management Endpoints
+
+Below is the documentation for the endpoints responsible for managing requests to assign or deassign patients to doctors.
+
+#### Get Request Types
+- **URL**: `/admin/request/types`
+- **HTTP Method**: GET
+- **Description**: Retrieves the possible request types.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Responses**:
+  - 200 OK: Returns an array of possible request types.
+    ```json
+    ["assign", "desassign"]
+    ```
+
+#### Create Request
+- **URL**: `/request/create`
+- **HTTP Method**: POST
+- **Description**: Creates a new request to either assign or deassign patients to a doctor.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Parameters**:
+  - `typeRequest` (string): The type of request ("assign" or "desassign").
+  - `id_patient` (array): Array of patient IDs to be assigned or deassigned.
+- **Responses**:
+  - 200 OK: Request successfully created.
+    ```json
+    { "newReq": { ... } }
+    ```
+  - 400 Bad Request: Invalid request type.
+
+#### Process Request
+- **URL**: `/request/interact`
+- **HTTP Method**: POST
+- **Description**: Processes a request to either assign or deassign patients based on validation.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Parameters**:
+  - `requestID` (string): The ID of the request.
+  - `validation` (boolean): Whether the request is validated or not.
+- **Responses**:
+  - 200 OK: Request successfully processed.
+    ```json
+    { "msg": "Request validated" }
+    ```
+  - 400 Bad Request: Request does not exist or request type is not possible.
+  - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
+
+#### Get Pending Requests
+- **URL**: `/request/get`
+- **HTTP Method**: GET
+- **Description**: Retrieves a list of pending requests.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Responses**:
+  - 200 OK: Returns a list of pending requests.
+    ```json
+    [
+      {
+        "id": "request_id",
+        "type": "assign",
+        ...
+      },
+      ...
+    ]
+    ```
+  - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
+
+These endpoints allow for the creation, processing, and retrieval of assignment and deassignment requests within the system. Ensure to provide the required parameters for successful operation. Let me know if you need further assistance or details.

@@ -15,7 +15,7 @@ export default class Request extends compose(BaseModel, AuthFinder) {
     declare id: number
   
     @column()
-    declare user_id: string
+    declare doctor_id: number
 
     @column()
     declare requestType: string
