@@ -58,3 +58,14 @@ export async function UserRegister(req) {
     const user = await User.create(payload_with_role)
     return user
 }
+
+export async function UserDeleted(req) {
+  // const payload = await req.validateUsing(registerValidator)
+    const payload_with_role = {fullName: req.fullName, email: req.email, password: req.password, administrator: false, doctorId: req.idDoctor ? req.idDoctor : 0}
+    const user = await User.findBy('doctorId', req.idDoctor)
+    if (user)
+      user.delete()
+    else
+      throw Error("Doctor didn't exist")
+    return user
+}

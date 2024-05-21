@@ -11,7 +11,7 @@ import router from '@adonisjs/core/services/router'
 import { middleware } from './kernel.js'
 import axios from 'axios'
 import RequestController from '../app/controllers/request_controller.js'
-import { UserRegister } from '#controllers/auth_controller'
+import { UserRegister, UserDeleted } from '#controllers/auth_controller'
 import { HttpContext } from '@adonisjs/core/http'
 
 
@@ -60,7 +60,7 @@ import { HttpContext } from '@adonisjs/core/http'
     let medicalUrl = ''
     let transversalUrl = ''
 
-    let customParam = 'false'
+    let customParam = 'true'
 
     if (customParam === 'false') {
       medicalUrl = 'http://medical:3335';
@@ -99,7 +99,7 @@ router.group(() => {
   router.get('patient_list', async ({ auth, response }) => {
     try {
       const user = auth.getUserOrFail()
-      const patients = await axios.post(transversalUrl + '/link/search', { doctor_id: user.id })
+      const patients = await axios.post(transversalUrl + '/link/search', { doctor_id: user.doctorId })
       console.log(patients.data)
       let patient_list = []
       for (let i = 0; i < patients.data.length; i+= 1) {
@@ -217,6 +217,50 @@ router.group(() => {
     } catch (error) {
       console.log(error)
       return response.internalServerError(error)
+    }
+  })
+  .use(middleware.auth())
+
+  router.delete('doctor', async ({ auth, request, response }) => {
+    try {
+      const user = auth.getUserOrFail()
+      if (user.administrator == false)
+        return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
+      const req = request.body()
+      console.log(req)
+      
+      const response_doctor_info_add = await axios.post(transversalUrl + '/doctor/delete', 
+      {
+        "id": req.doctorID,
+      })
+      await UserDeleted({ idDoctor: req.doctorID});
+
+      // const createRequestResponse = await UserRegister({ fullName: req.fullName, email: req.email, password: req.password ? req.password : "password", idDoctor: response_doctor_info_add.data.id});
+      return response.status(200).json("Deleted Successfully")
+    } catch (error) {
+      console.log(error)
+      return response.internalServerError(error.message)
+    }
+  })
+  .use(middleware.auth())
+  router.delete('patient', async ({ auth, request, response }) => {
+    try {
+      const user = auth.getUserOrFail()
+      if (user.administrator == false)
+        return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
+      const req = request.body()
+      console.log(req)
+      
+      const response_patient = await axios.post(transversalUrl + '/patient/delete', 
+      {
+        "id": req.patientID,
+      })
+
+      // const createRequestResponse = await UserRegister({ fullName: req.fullName, email: req.email, password: req.password ? req.password : "password", idDoctor: response_doctor_info_add.data.id});
+      return response.status(200).json("Deleted Successfully")
+    } catch (error) {
+      console.log(error)
+      return response.internalServerError(error.message)
     }
   })
   .use(middleware.auth())

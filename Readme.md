@@ -322,3 +322,29 @@ Below is the documentation for the routes responsible for creating doctors and p
   - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
 
 These routes allow for the creation of doctors and patients within the system. Ensure to provide the required parameters for successful creation. Let me know if you need further assistance or details.
+
+#### Delete Doctor
+- **URL**: `/admin/doctor`
+- **HTTP Method**: DELETE
+- **Description**: Deletes a doctor with the provided ID.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Parameters**:
+  - `doctorID` (string): ID of the doctor to be deleted. This parameter should be included in the request body.
+- **Responses**:
+  - 200 OK: Doctor successfully deleted.
+  - 401 Unauthorized: User is not authenticated, does not have necessary permissions, or is not an administrator.
+  - 500 Internal Server Error: An error occurred during the deletion process.
+
+#### Delete Patient
+- **URL**: `/admin/patient`
+- **HTTP Method**: DELETE
+- **Description**: Deletes a patient with the provided ID.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Parameters**:
+  - `patientID` (string): ID of the patient to be deleted. This parameter should be included in the request body.
+- **Responses**:
+  - 200 OK: Patient successfully deleted.
+  - 401 Unauthorized: User is not authenticated, does not have necessary permissions, or is not an administrator.
+  - 500 Internal Server Error: An error occurred during the deletion process.
+
+These routes allow for the deletion of doctors and patients within the system. Ensure to provide the required parameters for successful deletion. Let me know if you need further assistance or details.

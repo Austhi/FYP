@@ -1,6 +1,12 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import { createValidator, deleteValidator, findPatient, getPatient, modifyValidator } from '#validators/patient'
 import Patient from '#models/patient'
+import MedicalRelation from '#models/medical_relation'
+
+interface DeleteLinkPayload {
+    doctor_id: number | undefined,
+    patient_id: number
+}
 
 export default class PatientController {
     async create({ request, response }: HttpContext) {
@@ -26,7 +32,26 @@ export default class PatientController {
         const payload = await request.validateUsing(deleteValidator)
         const patient = await Patient.findBy({ id: payload.id }) // Using await to ensure you have the result
         if (patient) {
-            // If the patient is found, delete it
+                // delete all link related to doctor
+                const payloadlinks: DeleteLinkPayload = {
+                    doctor_id: undefined,
+                    patient_id: patient.id
+                }
+    
+    
+                const relations = await MedicalRelation.query().where('patient_id', payloadlinks.patient_id);
+    
+                const relationsList = await Promise.all(relations.map(async (relation) => {
+                    const link = await MedicalRelation.findBy('id', relation.id);
+                    if (link)
+                        link.delete()
+                    else
+                        console.log("link cannot be find")
+                }));
+              
+                console.log(relationsList); // Log the list of attributes
+    
+
             await patient.delete() // Delete the record
             console.log(`Patient with ID ${payload.id} deleted successfully`)
         } else {
