@@ -21,7 +21,7 @@ export default class Request extends compose(BaseModel, AuthFinder) {
     declare requestType: string
 
     @column()
-    declare status: number
+    declare status: string
 
     @column()
     declare data: any

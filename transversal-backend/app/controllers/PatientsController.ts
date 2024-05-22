@@ -22,7 +22,7 @@ export default class PatientController {
         const patient = await Patient.findBy({ id: payload.id }) // Using await to ensure you have the result
         if (!patient)
             return response.status(300).json({message: "ID cannot be found"})
-        const payload_more = {id: payload.id, fullName: payload.fullName ? payload.fullName : patient.fullName, email: payload.email ? payload.email : patient.email, birth_date: payload.birth_date ? payload.birth_date : patient.birth_date, medical_id: payload.medical_id ? payload.medical_id : patient.medical_id }
+        const payload_more = {id: payload.id, fullName: payload.fullName ? payload.fullName : patient.fullName, email: payload.email ? payload.email : patient.email, birth_date: payload.birth_date ? payload.birth_date : patient.birth_date }
         console.log(payload_more)
         const patientUpdated = await Patient.updateOrCreate({ id: payload.id }, payload_more)
         return response.status(200).json(patientUpdated)

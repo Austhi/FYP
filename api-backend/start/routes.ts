@@ -203,7 +203,7 @@ router.group(() => {
       const user = auth.getUserOrFail()
       if (user.administrator == false)
         return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
-      const req = request.body()
+      const req = request.params()
       console.log(req)
       
       const response_doctor_info_add = await axios.post(transversalUrl + '/doctor/delete', 
@@ -225,7 +225,7 @@ router.group(() => {
       const user = auth.getUserOrFail()
       if (user.administrator == false)
         return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
-      const req = request.body()
+      const req = request.params()
       console.log(req)
       
       const response_patient = await axios.post(transversalUrl + '/patient/delete', 

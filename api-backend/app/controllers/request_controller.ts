@@ -17,7 +17,6 @@ export default class RequestController {
         const payload = await request.validateUsing(createRequestValidator)
 
         if (payload.typeRequest == "assign" || payload.typeRequest == "desassign") {
-            const payload_assign = await request.validateUsing(createRequestValidator)
             const payload_with_role = {requestType: payload.typeRequest, data: JSON.stringify({patient_id: payload.id_patient}), status: 'Waiting', doctor_id: user.doctorId}
             const newReq = await Request.create(payload_with_role)
             return response.ok({newReq})
@@ -39,7 +38,7 @@ export default class RequestController {
             const formatedReqList = reqList.map((element) => {
                 // const Get Doctor Link
 
-                return { id: element.id, type: element.typeRequest,  };
+                return { id: element.id, type: element.requestType  };
               });
     
             return response.ok(reqList)
