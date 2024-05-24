@@ -29,6 +29,7 @@ export default class PatientController {
     }
 
     async delete({ request, response }: HttpContext) {
+        console.log(request)
         const payload = await request.validateUsing(deleteValidator)
         const patient = await Patient.findBy({ id: payload.id }) // Using await to ensure you have the result
         if (patient) {
@@ -37,8 +38,7 @@ export default class PatientController {
                     doctor_id: undefined,
                     patient_id: patient.id
                 }
-    
-    
+
                 const relations = await MedicalRelation.query().where('patient_id', payloadlinks.patient_id);
     
                 const relationsList = await Promise.all(relations.map(async (relation) => {
