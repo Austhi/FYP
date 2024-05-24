@@ -1,7 +1,7 @@
 let medicalUrl = ''
 let transversalUrl = ''
 
-let customParam = 'false'
+let customParam = 'true'
 
 if (customParam === 'false') {
   medicalUrl = 'http://medical:3335';

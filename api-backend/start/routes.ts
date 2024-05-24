@@ -198,19 +198,21 @@ router.group(() => {
   })
   .use(middleware.auth())
 
-  router.delete('doctor', async ({ auth, request, response }) => {
+  router.delete('doctor', async({ auth, request, response }) => {
     try {
       const user = auth.getUserOrFail()
       if (user.administrator == false)
         return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
-      const req = request.params()
-      console.log(req)
+      // Extract the query parameter
+      const doctorID = request.input('doctorID')
+      
       
       const response_doctor_info_add = await axios.post(transversalUrl + '/doctor/delete', 
       {
-        "id": req.doctorID,
+        "id": doctorID,
       })
-      await UserDeleted({ idDoctor: req.doctorID});
+      console.log(response_doctor_info_add)
+      await UserDeleted({ idDoctor: doctorID});
 
       // const createRequestResponse = await UserRegister({ fullName: req.fullName, email: req.email, password: req.password ? req.password : "password", idDoctor: response_doctor_info_add.data.id});
       return response.status(200).json("Deleted Successfully")
@@ -225,12 +227,12 @@ router.group(() => {
       const user = auth.getUserOrFail()
       if (user.administrator == false)
         return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
-      const req = request.params()
-      console.log(req)
-      
+      // Extract the query parameter
+      const patientID = request.input('patientID')
+
       const response_patient = await axios.post(transversalUrl + '/patient/delete', 
       {
-        "id": req.patientID,
+        "id": patientID,
       })
 
       // const createRequestResponse = await UserRegister({ fullName: req.fullName, email: req.email, password: req.password ? req.password : "password", idDoctor: response_doctor_info_add.data.id});
