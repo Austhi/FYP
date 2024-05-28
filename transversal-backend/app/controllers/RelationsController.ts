@@ -6,8 +6,13 @@ export default class RelationControler {
     async add({ request, response }: HttpContext) {
         const payload = await request.validateUsing(createValidator)
         console.log(payload)
-        const doctor = await MedicalRelation.create(payload)
-        return response.created(doctor)
+
+        const existant_link = await MedicalRelation.findManyBy(payload)
+        if (existant_link)
+            return response.status(409).json({"msg": "link already exists"});
+
+        const link = await MedicalRelation.create(payload)
+        return response.created(link)
     }
     async remove({ request, response }: HttpContext) {
         const payload = await request.validateUsing(createValidator)
