@@ -6,9 +6,13 @@ WORKDIR /app
 
 COPY . .
 
+RUN node -v
+
 RUN npm install
-RUN npm install dotenv
+
+RUN node ace migration:run
 
 EXPOSE 3336
+
 
 CMD ["node", "ace", "serve", "--watch"]

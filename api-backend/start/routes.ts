@@ -19,6 +19,7 @@ import { aiUrl, medicalUrl, transversalUrl } from './network.js'
     const AuthController = () => import('#controllers/auth_controller')
     
     router.group(() => {
+      router.get('roles', [AuthController, 'getRoles'])
       router.post('register', [AuthController, 'register'])
       router.post('register/admin', [AuthController, 'registerAsAdmin'])
       router.post('login', [AuthController, 'login'])
@@ -104,12 +105,16 @@ router.group(() => {
     try {
       const user = auth.getUserOrFail()
 
-      // Extract the query parameter
-      const patientID = request.input('patientID')
-      const records = await axios.get(medicalUrl + '/records/get', { params: {patientID: patientID} })
-
-      return response.status(200).json(records.data)
-    } catch (error) {
+      if (user.role == "admin" || user.role == "doctor") { //
+        // Extract the query parameter
+        const patientID = request.input('patientID')
+        const records = await axios.get(medicalUrl + '/records/get', { params: {patientID: patientID} })
+        
+        return response.status(200).json(records.data)
+      } else {
+        return response.unauthorized()
+      }
+      } catch (error) {
       console.log(error)
     }
   })
@@ -118,12 +123,15 @@ router.group(() => {
     try {
       const user = auth.getUserOrFail()
       // when role add, check role
-
-      // Extract the query parameter
-      const req = request.body()
-      const record_create = await axios.post(medicalUrl + '/records/create', req)
-      
-      return response.status(200).json(record_create.data)
+      if (user.role == "admin" || user.role == "doctor") {
+        // Extract the query parameter
+        const req = request.body()
+        const record_create = await axios.post(medicalUrl + '/records/create', req)
+        
+        return response.status(200).json(record_create.data)
+      } else {
+        response.unauthorized()
+      }
     } catch (error) {
       console.log(error)
     }
@@ -131,6 +139,8 @@ router.group(() => {
   router.post('records/modify', async ({ auth, request, response }) => {
     try {
       const user = auth.getUserOrFail()
+      if (user.role == "admin" || user.role == "doctor") {
+
       // when role add, check role
 
       /* body : 
@@ -158,6 +168,9 @@ router.group(() => {
       const record_create = await axios.post(medicalUrl + '/records/modify', {id: req.recordID, modifiedData: req.data})
       
       return response.status(200).json(record_create.data)
+    } else {
+      return response.unauthorized()
+    }
     } catch (error) {
       console.log(error)
     }
@@ -166,6 +179,8 @@ router.group(() => {
   router.delete('records', async ({ auth, request, response }) => {
     try {
       const user = auth.getUserOrFail()
+      if (user.role == "admin" || user.role == "doctor") { //
+
       // when role add, check role
 
       // Extract the query parameter
@@ -174,6 +189,9 @@ router.group(() => {
       const record_create = await axios.post(medicalUrl + '/records/delete', {id: recordID})
       
       return response.status(200).json(record_create.data)
+      } else {
+        return response.unauthorized()
+      }
     } catch (error) {
       console.log(error)
     }
@@ -196,7 +214,7 @@ router.group(() => {
   router.get('patient_list', async ({ auth, request, response }) => {
     try {
       const user = auth.getUserOrFail()
-      if (user.administrator == false)
+      if (user.role != "admin")
         return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
       const patient_list = await axios.get(transversalUrl + '/patient/findBy', { params: { name: request.qs().name ? request.qs().name : '' }})
       console.log(patient_list.data)
@@ -209,7 +227,7 @@ router.group(() => {
   router.get('doctor_list', async ({ auth, request, response }) => {
     try {
       const user = auth.getUserOrFail()
-      if (user.administrator == false)
+      if (user.role != "admin")
         return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
       const doctor_list = await axios.get(transversalUrl + '/doctor/findBy', { params: { name: request.qs().name ? request.qs().name : '' }})
       console.log(doctor_list.data)
@@ -222,7 +240,7 @@ router.group(() => {
   router.post('assign/patient_to_doctor', async ({ auth, request, response }) => {
     try {
       const user = auth.getUserOrFail()
-      if (user.administrator == false)
+      if (user.role != "admin")
         return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
       const req = request.body()
       console.log(req)
@@ -236,7 +254,7 @@ router.group(() => {
   router.post('deassign/patient_to_doctor', async ({ auth, request, response }) => {
     try {
       const user = auth.getUserOrFail()
-      if (user.administrator == false)
+      if (user.role != "admin")
         return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
       const req = request.body()
       console.log(req)
@@ -250,7 +268,7 @@ router.group(() => {
   router.post('create/doctor', async ({ auth, request, response }) => {
     try {
       const user = auth.getUserOrFail()
-      if (user.administrator == false)
+      if (user.role != "admin")
         return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
       const req = request.body()
       console.log(req)
@@ -261,7 +279,7 @@ router.group(() => {
         "email": req.email,
         "role": req.role ? req.role : "Undefined" 
       })
-      const createRequestResponse = await UserRegister({ fullName: req.fullName, email: req.email, password: req.password ? req.password : "password", idDoctor: response_doctor_info_add.data.id});
+      const createRequestResponse = await UserRegister({ fullName: req.fullName, email: req.email, password: req.password ?? "password", role: req.role, idDoctor: response_doctor_info_add.data.id});
       return response.created(createRequestResponse)
     } catch (error) {
       console.log(error)
@@ -272,7 +290,7 @@ router.group(() => {
   router.post('create/patient', async ({ auth, request, response }) => {
     try {
       const user = auth.getUserOrFail()
-      if (user.administrator == false)
+      if (user.role != "admin")
         return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
       const req = request.body()
       console.log(req)
@@ -293,7 +311,7 @@ router.group(() => {
   router.delete('doctor', async({ auth, request, response }) => {
     try {
       const user = auth.getUserOrFail()
-      if (user.administrator == false)
+      if (user.role != "admin")
         return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
       // Extract the query parameter
       const doctorID = request.input('doctorID')
@@ -317,7 +335,7 @@ router.group(() => {
   router.delete('patient', async ({ auth, request, response }) => {
     try {
       const user = auth.getUserOrFail()
-      if (user.administrator == false)
+      if (user.role != "admin")
         return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
       // Extract the query parameter
       const patientID = request.input('patientID')
@@ -335,5 +353,4 @@ router.group(() => {
     }
   })
   .use(middleware.auth())
-
 }).prefix('admin')

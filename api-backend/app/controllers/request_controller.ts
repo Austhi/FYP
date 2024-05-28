@@ -14,6 +14,8 @@ export default class RequestController {
     async create({request, auth, response}:  HttpContext) {
         await auth.authenticate()
         const user = auth.getUserOrFail()
+
+        // check role for typeOfRequest
         const payload = await request.validateUsing(createRequestValidator)
 
         if (payload.typeRequest == "assign" || payload.typeRequest == "desassign") {
@@ -31,7 +33,7 @@ export default class RequestController {
     async get({request, auth, response}:  HttpContext) {
         const user = auth.getUserOrFail()
 
-        if (user.administrator == true) {
+        if (user.role == "admin") {
             const reqList = await Request.query().where('status', 'like', `%${"Waiting"}%`); // Recherche partielle avec des jokers
             console.log(reqList)
 
@@ -53,7 +55,7 @@ export default class RequestController {
     async interaction({request, auth, response}:  HttpContext) {
         await auth.authenticate()
         const user = auth.getUserOrFail()
-        if (user.administrator == false)
+        if (user.role == "admin")
             return response.unauthorized()
     
         const payload = await request.validateUsing(interactRequestValidator)

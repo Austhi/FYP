@@ -1,7 +1,7 @@
 version: '3.3'
 
 services:
-  api-backend:
+  api-service:
     build:
       context: ./api-backend
       dockerfile: Dockerfile
@@ -13,7 +13,7 @@ services:
         aliases:
           - api
   
-  transversal-backend:
+  transversal-service:
     build:
       context: ./transversal-backend
       dockerfile: Dockerfile
@@ -23,7 +23,7 @@ services:
         aliases:
           - transversal
 
-  medical-backend:
+  medical-service:
     build:
       context: ./medical-backend
       dockerfile: Dockerfile
@@ -33,7 +33,7 @@ services:
         aliases:
           - medical
 
-  ai-api:
+  ai-service:
     build:
       context: ./ai-api
       dockerfile: Dockerfile

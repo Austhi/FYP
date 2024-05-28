@@ -303,7 +303,9 @@ Below is the documentation for the routes responsible for creating doctors and p
 - **Parameters**:
   - `fullName` (string): Full name of the doctor.
   - `email` (string): Email address of the doctor.
-  - `role` (string) (optional): Role of the doctor (e.g., surgeon, physician).
+  - `role` (string): Role of the doctor (e.g., surgeon, physician).
+  - `password` (optional)(string): Role of the doctor (e.g., surgeon, physician).
+
 - **Responses**:
   - 200 OK: Doctor successfully created.
   - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
@@ -503,3 +505,14 @@ Below is the documentation for the endpoints responsible for managing medical re
   - 200 OK: Medical record successfully modified.
   - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
   - 500 Internal Server Error: An error occurred while modifying the record.
+
+#### Get Available Roles
+- **URL**: `/roles`
+- **HTTP Method**: GET
+- **Description**: Retrieves a list of available roles.
+- **Authentication Required**: None
+- **Responses**:
+  - 200 OK: Returns a list of roles (`["admin", "doctor", "staff"]`).
+  - 500 Internal Server Error: An error occurred while retrieving the roles.
+
+These endpoints allow for the management of medical records for patients and retrieval of available roles. Ensure to provide the required parameters for successful operation. Let me know if you need further assistance or details.

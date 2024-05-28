@@ -4,13 +4,9 @@ import User from '#models/user'
 
 export default class AuthController {
 
-/**
-* @show
-* @paramPath id - Describe the param
-* @description Returns a product with it's relation on user and user relations
-* @responseBody 200 - <Product>.with(user, user.relations)
-* @responseBody 404
-*/
+  async getRoles({ response }: HttpContext) {
+    return response.ok(["admin", "doctor", "staff"])
+  }
 
   async login({ request, response }: HttpContext) {
     const { email, password } = await request.validateUsing(loginValidator)
@@ -23,19 +19,22 @@ export default class AuthController {
       ...user.serialize(),
     })
   }
+
+  // must be remove
   async register({ request, response }: HttpContext) {
       const payload = await request.validateUsing(registerValidator)
   
-      const payload_with_role = {fullName: payload.fullName, email: payload.email, password: payload.password, administrator: false, doctorId: payload.idDoctor ? payload.idDoctor : 0}
+      const payload_with_role = {fullName: payload.fullName, email: payload.email, password: payload.password, role: "staff", doctorId: payload.idDoctor ? payload.idDoctor : 0}
       const user = await User.create(payload_with_role)
   
       return response.created(user)
   }
 
+  // must be remove
   async registerAsAdmin({ request, response }: HttpContext) {
     const payload = await request.validateUsing(registerValidator)
 
-    const payload_with_role = {fullName: payload.fullName, email: payload.email, password: payload.password, administrator: true, doctorId: 0}
+    const payload_with_role = {fullName: payload.fullName, email: payload.email, password: payload.password, role: payload.role, doctorId: 0}
     const user = await User.create(payload_with_role)
 
     return response.created(user)
@@ -54,14 +53,14 @@ export default class AuthController {
 
 export async function UserRegister(req) {
   // const payload = await req.validateUsing(registerValidator)
-    const payload_with_role = {fullName: req.fullName, email: req.email, password: req.password, administrator: false, doctorId: req.idDoctor ? req.idDoctor : 0}
+    const payload_with_role = {fullName: req.fullName, email: req.email, password: req.password, role: req.role, doctorId: req.idDoctor ? req.idDoctor : 0}
     const user = await User.create(payload_with_role)
     return user
 }
 
 export async function UserDeleted(req) {
   // const payload = await req.validateUsing(registerValidator)
-    const payload_with_role = {fullName: req.fullName, email: req.email, password: req.password, administrator: false, doctorId: req.idDoctor ? req.idDoctor : 0}
+    // const payload_with_role = {fullName: req.fullName, email: req.email, password: req.password, role: req.role, doctorId: req.idDoctor ? req.idDoctor : 0}
     const user = await User.findBy('doctorId', req.idDoctor)
     if (user)
       user.delete()
