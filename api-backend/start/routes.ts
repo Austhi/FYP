@@ -92,6 +92,57 @@ router.group(() => {
 
 router.group(() => {
   // route wip
+  router.get('records', async ({ auth, request, response }) => {
+    try {
+      const user = auth.getUserOrFail()
+
+      // Extract the query parameter
+      const patientID = request.input('patientID')
+      const records = await axios.get(medicalUrl + '/records/get', { params: {patientID: patientID} })
+
+      return response.status(200).json(records.data)
+    } catch (error) {
+      console.log(error)
+    }
+  })
+  .use(middleware.auth())
+  router.post('records/add', async ({ auth, request, response }) => {
+    try {
+      const user = auth.getUserOrFail()
+      // when role add, check role
+
+      // Extract the query parameter
+      const req = request.body()
+      const record_create = await axios.post(medicalUrl + '/records/create', req)
+      
+      return response.status(200).json(record_create.data)
+    } catch (error) {
+      console.log(error)
+    }
+  })
+  .use(middleware.auth())
+  router.delete('records', async ({ auth, request, response }) => {
+    try {
+      const user = auth.getUserOrFail()
+      // when role add, check role
+
+      // Extract the query parameter
+      const recordID = request.input('recordID')
+
+      const record_create = await axios.post(medicalUrl + '/records/delete', {id: recordID})
+      
+      return response.status(200).json(record_create.data)
+    } catch (error) {
+      console.log(error)
+    }
+  })
+  .use(middleware.auth())
+
+}).prefix('patient')
+
+
+router.group(() => {
+  // route wip
   router.post('create', [RequestController, "create"])
   router.get('', [RequestController, "get"])
   router.post('interaction', [RequestController, "interaction"])

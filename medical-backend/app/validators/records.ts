@@ -20,3 +20,9 @@ export const deleteValidator = vine.compile(
       id: vine.number(),
     })
   )
+
+export const getValidator = vine.compile(
+  vine.object({
+    patientID: vine.number(),
+  })
+)

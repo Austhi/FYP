@@ -43,9 +43,9 @@ export default class MedicalRecord extends BaseModel {
   @column()
   declare no_major_vessels: Number | null
 
-  @column()
-  declare medicalCheckDate: Date
-
+  @column.dateTime()
+  public medicalCheckDate!: DateTime
+  
   @column.dateTime({ autoCreate: true })
   declare createdAt: DateTime
 

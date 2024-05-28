@@ -414,4 +414,61 @@ Below is the documentation for the endpoints responsible for managing requests t
     ```
   - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
 
-These endpoints allow for the creation, processing, and retrieval of assignment and deassignment requests within the system. Ensure to provide the required parameters for successful operation. Let me know if you need further assistance or details.
+### Documentation for Patient Medical Records Management
+
+Below is the documentation for the endpoints responsible for managing medical records for patients:
+
+#### Get Patient Records
+- **URL**: `/patient/records`
+- **HTTP Method**: GET
+- **Description**: Retrieves medical records for a specific patient.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Parameters**:
+  - `patientID` (integer): ID of the patient whose records are to be fetched.
+- **Responses**:
+  - 200 OK: Returns the medical records of the specified patient.
+  - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
+  - 500 Internal Server Error: An error occurred while retrieving the records.
+
+#### Add Medical Record
+- **URL**: `/patient/records/add`
+- **HTTP Method**: POST
+- **Description**: Adds a new medical record for a patient.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Request Body**:
+  ```json
+  {
+    "patientID": 1,
+    "medical_record_date": "2024-05-28",
+    "data": {
+        "age": 54,
+        "chest_pain": 0,
+        "restingBP": 130,
+        "serum_cholestrol": 246,
+        "fasting_blood_sugar": 1,
+        "resting_electro_records": 0,
+        "max_heart_rate": 178,
+        "exercise_angia": 0,
+        "oldpeak": 1.5,
+        "slope": 1,
+        "no_major_vessels": 0
+    }
+  }
+  ```
+  - All fields in `data` are optional.
+- **Responses**:
+  - 200 OK: Medical record successfully added.
+  - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
+  - 500 Internal Server Error: An error occurred while adding the record.
+
+#### Delete Medical Record
+- **URL**: `/patient/records`
+- **HTTP Method**: DELETE
+- **Description**: Deletes a medical record based on the provided record ID.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Parameters**:
+  - `recordID` (integer): ID of the record to be deleted.
+- **Responses**:
+  - 200 OK: Medical record successfully deleted.
+  - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
+  - 500 Internal Server Error: An error occurred while deleting the record.
