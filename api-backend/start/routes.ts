@@ -13,7 +13,7 @@ import axios from 'axios'
 import RequestController from '../app/controllers/request_controller.js'
 import { UserRegister, UserDeleted } from '#controllers/auth_controller'
 import { HttpContext } from '@adonisjs/core/http'
-import { medicalUrl, transversalUrl } from './network.js'
+import { aiUrl, medicalUrl, transversalUrl } from './network.js'
 
 
     const AuthController = () => import('#controllers/auth_controller')
@@ -47,7 +47,6 @@ import { medicalUrl, transversalUrl } from './network.js'
     
     router.group(() => {
       router.get('/transversal', async ({ response }) => {
-        console.log("GET /transversal")
         try {
           const { data } = await axios.post(transversalUrl + '/', {data: "data"});
           return response.status(200).json(data); // Send the response data to the client
@@ -61,11 +60,20 @@ import { medicalUrl, transversalUrl } from './network.js'
         try {
           const { data } = await axios.get(medicalUrl + '/');
           return response.status(200).json(data); // Send the response data to the client
-    } catch (error) {
-      console.log(error);
-      return response.status(500).json({ error: 'Internal server error' }); // Handle errors
-    }
-  });
+        } catch (error) {
+          console.log(error);
+          return response.status(500).json({ error: 'Internal server error' }); // Handle errors
+        }
+      });
+      router.get('/ai', async ({ response }) => {
+        try {
+          const { data } = await axios.get(aiUrl + '/');
+          return response.status(200).json(data); // Send the response data to the client
+        } catch (error) {
+          console.log(error);
+          return response.status(500).json({ error: 'Internal server error' }); // Handle errors
+        }
+      });
 }).prefix('access');
 
 router.group(() => {
@@ -119,6 +127,40 @@ router.group(() => {
     } catch (error) {
       console.log(error)
     }
+  }).use(middleware.auth())
+  router.post('records/modify', async ({ auth, request, response }) => {
+    try {
+      const user = auth.getUserOrFail()
+      // when role add, check role
+
+      /* body : 
+      {
+        recordID: 1,
+        data: {
+            age: 
+            chest_pain: 
+            restingBP: 
+            serum_cholestrol: 
+            fasting_blood_sugar: 
+            resting_electro_records: 
+            max_heart_rate: 
+            exercise_angia: 
+            old_peak: 
+            slope: 
+            no_major_vessels: 
+            medical_record_date:
+        }
+      }
+      }
+      */
+      // Extract the query parameter
+      const req = request.body()
+      const record_create = await axios.post(medicalUrl + '/records/modify', {id: req.recordID, modifiedData: req.data})
+      
+      return response.status(200).json(record_create.data)
+    } catch (error) {
+      console.log(error)
+    }
   })
   .use(middleware.auth())
   router.delete('records', async ({ auth, request, response }) => {
@@ -139,7 +181,6 @@ router.group(() => {
   .use(middleware.auth())
 
 }).prefix('patient')
-
 
 router.group(() => {
   // route wip

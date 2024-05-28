@@ -472,3 +472,34 @@ Below is the documentation for the endpoints responsible for managing medical re
   - 200 OK: Medical record successfully deleted.
   - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
   - 500 Internal Server Error: An error occurred while deleting the record.
+
+#### Modify Medical Record
+- **URL**: `/patient/records/modify`
+- **HTTP Method**: POST
+- **Description**: Modifies an existing medical record based on the provided record ID and modified data.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Request Body**:
+  ```json
+  {
+    "recordID": 1,
+    "data": {
+        "age": 55,
+        "chest_pain": 1,
+        "restingBP": 120,
+        "serum_cholestrol": 220,
+        "fasting_blood_sugar": 0,
+        "resting_electro_records": 1,
+        "max_heart_rate": 160,
+        "exercise_angia": 1,
+        "oldpeak": 2.0,
+        "slope": 2,
+        "no_major_vessels": 1,
+        "medical_record_date": "2024-06-01"
+    }
+  }
+  ```
+  - All fields in `data` are optional.
+- **Responses**:
+  - 200 OK: Medical record successfully modified.
+  - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
+  - 500 Internal Server Error: An error occurred while modifying the record.

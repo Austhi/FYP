@@ -7,6 +7,7 @@ WORKDIR /app
 COPY . .
 
 RUN npm install
+RUN npm install dotenv
 
 EXPOSE 3336
 

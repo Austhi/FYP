@@ -33,6 +33,17 @@ services:
         aliases:
           - medical
 
+  ai-api:
+    build:
+      context: ./ai-api
+      dockerfile: Dockerfile
+    restart: always
+    networks:
+      my-network:
+        aliases:
+          - ai
+
+
 networks:
   my-network:
     driver: bridge
