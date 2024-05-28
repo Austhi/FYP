@@ -299,6 +299,7 @@ router.group(() => {
       {
         "fullName": req.fullName,
         "email": req.email,
+        "birth_date": req.birthDate
       })
       return response.created(response_patient_info_add.data)
     } catch (error) {
