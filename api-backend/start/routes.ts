@@ -14,6 +14,9 @@ import RequestController from '../app/controllers/request_controller.js'
 import { UserRegister, UserDeleted } from '#controllers/auth_controller'
 import { HttpContext } from '@adonisjs/core/http'
 import { aiUrl, medicalUrl, transversalUrl } from './network.js'
+import { promises as fs } from 'fs'
+import { parse } from 'csv-parse/sync'
+import _ from 'lodash'
 
 
     const AuthController = () => import('#controllers/auth_controller')
@@ -292,14 +295,46 @@ router.group(() => {
         return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
       const req = request.body()
       console.log(req)
+
+      const fileContent = await fs.readFile('Cardiovascular_Disease_Dataset.csv', 'utf8')
+      const records = parse(fileContent, { columns: true })
+      const randomRecords = _.sampleSize(records, 10)
       
+      console.log(randomRecords)
+
       const response_patient_info_add = await axios.post(transversalUrl + '/patient/create', 
       {
         "fullName": req.fullName,
         "email": req.email,
         "birth_date": req.birthDate
       })
+
+      // temporary 
+
+      // Extract the query parameter
+      randomRecords.map(async (record, idx) => {
+        const req_record = {patientID: response_patient_info_add.data.id, medical_record_date: (idx+1 < 10 ? '2024-05-0' : '2024-05-') +String(idx+1), data: {
+          age: Number(record.age),
+          chest_pain: Number(record.chestpain),
+          restingBP: Number(record.restingBP),
+
+          serum_cholestrol: Number(record.serumcholestrol),
+          fasting_blood_sugar: Number(record.fastingbloodsugar),
+          resting_electro_records: Number(record.restingrelectro),
+          max_heart_rate: Number(record.maxheartrate),
+          exercise_angia: Number(record.exerciseangia),
+          oldpeak: Number(record.oldpeak),
+          slope: Number(record.slope),
+          no_major_vessels: Number(record.noofmajorvessels),
+        }
+      }
+        console.log(records, req_record)
+        const record_create = await axios.post(medicalUrl + '/records/create', req_record)
+      })
+      
+      
       return response.created(response_patient_info_add.data)
+      // return response.ok("OK  ")
     } catch (error) {
       console.log(error)
       return response.internalServerError(error)
@@ -343,6 +378,12 @@ router.group(() => {
       {
         "id": patientID,
       })
+      const response_RecordsPatient = await axios.post(medicalUrl + '/records/delete/patient', 
+      {
+        "patientID": patientID,
+      })
+
+      console.log(response_RecordsPatient)
 
       // const createRequestResponse = await UserRegister({ fullName: req.fullName, email: req.email, password: req.password ? req.password : "password", idDoctor: response_doctor_info_add.data.id});
       return response.status(200).json("Deleted Successfully")

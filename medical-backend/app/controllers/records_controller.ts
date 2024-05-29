@@ -1,6 +1,6 @@
 import type { HttpContext } from '@adonisjs/core/http'
 import MedicalRecord from '#models/medicalRecords'
-import { createValidator, deleteValidator, getValidator, modifyValidator } from '#validators/records'
+import { createValidator, deletePatientValidator, deleteValidator, getValidator, modifyValidator } from '#validators/records'
 import { DateTime } from 'luxon';
 
 export default class RecordsController {
@@ -71,4 +71,19 @@ export default class RecordsController {
             return response.status(204).json({msg: `Patient with ID ${payload.id} not found`})
         }
     }
+
+    async deletePatient({ request, response }: HttpContext) {
+        const payload = await request.validateUsing(deletePatientValidator)
+        const records = await MedicalRecord.findManyBy({ patient_id: payload.patientID }) // Using await to ensure you have the result
+        if (records) {
+            records.map(async (record) => {
+                await record.delete() // Delete the record
+            })
+            // If the patient is found, delete it
+            return response.status(200).json({msg: `Records of Patient with ID ${payload.patientID} deleted successfully`})
+        } else {
+            return response.status(204).json({msg: `Records of Patient with ID ${payload.patientID} not found`})
+        }
+    }
+
 }

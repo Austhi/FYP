@@ -1,3 +1,4 @@
 node_modules/
 .env
 api-backend/start/network.ts
+api-backend/.env
