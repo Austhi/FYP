@@ -8,8 +8,10 @@ export default class RelationControler {
         console.log(payload)
 
         const existant_link = await MedicalRelation.findManyBy(payload)
-        if (existant_link)
+        if (existant_link.length > 0) {
+            console.log(existant_link)
             return response.status(409).json({"msg": "link already exists"});
+        }
 
         const link = await MedicalRelation.create(payload)
         return response.created(link)

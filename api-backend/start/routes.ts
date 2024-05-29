@@ -35,8 +35,6 @@ import { aiUrl, medicalUrl, transversalUrl } from './network.js'
       .use(middleware.auth())
     }).prefix('user')
     
-    
-    
     router.group(() => {
       router.get('/', async () => {
         return {
@@ -105,7 +103,7 @@ router.group(() => {
     try {
       const user = auth.getUserOrFail()
 
-      if (user.role == "admin" || user.role == "doctor") { //
+      if (user.role == "admin" || user.role == "doctor" || user.role == "staff") { //
         // Extract the query parameter
         const patientID = request.input('patientID')
         const records = await axios.get(medicalUrl + '/records/get', { params: {patientID: patientID} })

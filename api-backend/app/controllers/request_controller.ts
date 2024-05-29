@@ -31,8 +31,13 @@ export default class RequestController {
     }
 
     async get({request, auth, response}:  HttpContext) {
+        try {
+            await auth.authenticate()
+        } catch (error) {
+          return response.unauthorized({ error: 'You must be logged in to create a medical record' })
+        }
         const user = auth.getUserOrFail()
-
+        console.log(user.role)
         if (user.role == "admin") {
             const reqList = await Request.query().where('status', 'like', `%${"Waiting"}%`); // Recherche partielle avec des jokers
             console.log(reqList)
@@ -45,7 +50,8 @@ export default class RequestController {
     
             return response.ok(reqList)
         } else {
-            response.unauthorized()
+            // response.unauthorized()
+            response.status(400).json({error: "Error"})
         }
             
 
@@ -53,9 +59,13 @@ export default class RequestController {
     }
 
     async interaction({request, auth, response}:  HttpContext) {
-        await auth.authenticate()
+        try {
+            await auth.authenticate()
+        } catch (error) {
+          return response.unauthorized({ error: 'You must be logged in to create a medical record' })
+        }
         const user = auth.getUserOrFail()
-        if (user.role == "admin")
+        if (user.role != "admin")
             return response.unauthorized()
     
         const payload = await request.validateUsing(interactRequestValidator)
