@@ -266,6 +266,24 @@ temporal alternative
   - 200 OK: Successful request. Returns doctors list find by the name.
   - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
 
+### Documentation for Doctor's Patients Endpoint
+
+This is the documentation for the endpoint that retrieves patients associated with a doctor:
+
+#### Get Doctor's Patients
+- **URL**: `/admin/doctor_patients`
+- **HTTP Method**: GET
+- **Description**: Retrieves a list of patients associated with a specific doctor.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Parameters**:
+  - `doctorID` (integer): ID of the doctor whose patients are to be retrieved.
+- **Responses**:
+  - 200 OK: Successful request. Returns the list of patients associated with the doctor.
+  - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
+  - 500 Internal Server Error: An error occurred during the retrieval process.
+
+This endpoint allows administrators to retrieve a list of patients associated with a specific doctor. Ensure to provide the required parameters for successful operation.
+
 #### Assign Patient to Doctor
 - **URL**: `/admin/assign/patient_to_doctor`
 - **HTTP Method**: POST

@@ -267,6 +267,28 @@ router.group(() => {
     }
   })
   .use(middleware.auth())
+  router.get('doctor_patients', async ({ auth, request, response }) => {
+    try {
+      const user = auth.getUserOrFail()
+      if (user.role != "admin")
+        return response.status(401).json({"errors": [{"message": "Unauthorized access"}]})
+      const doctorID = request.input('doctorID')
+      const patients = await axios.post(transversalUrl + '/link/search', { doctor_id: doctorID })
+      console.log(patients.data)
+      let patient_list = []
+      for (let i = 0; i < patients.data.length; i+= 1) {
+        const patient_info = await axios.get(transversalUrl + '/patient/get', { params: {id: patients.data[i].patientId}})
+
+        patient_list.push(patient_info.data)
+      }
+      console.log(patient_list)
+      return response.status(200).json(patient_list)
+    } catch (error) {
+      console.log(error)
+    }
+  })
+  .use(middleware.auth())
+
   router.post('assign/patient_to_doctor', async ({ auth, request, response }) => {
     try {
       const user = auth.getUserOrFail()
