@@ -516,3 +516,19 @@ Below is the documentation for the endpoints responsible for managing medical re
   - 500 Internal Server Error: An error occurred while retrieving the roles.
 
 These endpoints allow for the management of medical records for patients and retrieval of available roles. Ensure to provide the required parameters for successful operation. Let me know if you need further assistance or details.
+
+### Documentation for AI Analysis Endpoint
+
+#### Perform AI Analysis
+- **URL**: `/ai_analysis`
+- **HTTP Method**: GET
+- **Description**: Performs AI analysis on the latest medical record of a patient.
+- **Authentication Required**: Adonis Token in the `Authorization` header in the format `Bearer <token>`
+- **Parameters**:
+  - `patientID` (integer): ID of the patient whose records are to be analyzed.
+- **Responses**:
+  - 200 OK: Successful analysis. Returns the analysis result.
+  - 401 Unauthorized: User is not authenticated or does not have necessary permissions.
+  - 500 Internal Server Error: An error occurred during analysis.
+
+This endpoint allows users with roles of "admin", "doctor", or "staff" to perform AI analysis on the latest medical record of a specified patient. Ensure to provide the required parameters for successful operation.

@@ -198,6 +198,35 @@ router.group(() => {
     }
   })
   .use(middleware.auth())
+  router.get('ai_analysis', async ({ auth, request, response }) => {
+    try {
+      const user = auth.getUserOrFail()
+
+      if (user.role == "admin" || user.role == "doctor" || user.role == "staff") { //
+        const patientID = request.input('patientID')
+        const records = await axios.get(medicalUrl + '/records/get', { params: {patientID: patientID} })
+        const records_data = records.data
+        console.log(records)
+        // sort records by updated_at
+        records_data.sort((a, b) => {
+          if (a.updated_at > b.updated_at) return -1
+          if (a.updated_at < b.updated_at) return 1
+          return 0
+        })
+  
+        const analysis = await axios.post(aiUrl + '/ai_analysis', { data: records_data[0] })
+
+        
+        return response.status(analysis.status).json({msg: analysis.data})
+      } else {
+        return response.unauthorized()
+      }
+      } catch (error) {
+      console.log(error)
+    }
+  })
+  .use(middleware.auth())
+
 
 }).prefix('patient')
 
