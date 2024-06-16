@@ -214,6 +214,8 @@ router.group(() => {
           return 0
         })
   
+        console.log(records_data)
+
         const analysis = await axios.post(aiUrl + '/ai_analysis', { data: records_data[0] })
 
         
